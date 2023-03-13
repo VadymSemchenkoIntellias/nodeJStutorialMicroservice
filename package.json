@@ -1,0 +1,28 @@
+{
+  "name": "nodejstutorialmicroservice",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "kill": "lsof -n -i4TCP:5001 | sed '1 d' | awk '{print $2}' | xargs kill -9"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VadymSemchenkoIntellias/nodeJStutorialMicroservice.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VadymSemchenkoIntellias/nodeJStutorialMicroservice/issues"
+  },
+  "homepage": "https://github.com/VadymSemchenkoIntellias/nodeJStutorialMicroservice#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.21"
+  }
+}
