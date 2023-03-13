@@ -1,12 +1,16 @@
 import express from 'express';
-// import router from "./router.js";
+import router from "./router.js";
 
 const PORT = 5001;
 
 const app = express();
 
 app.use(express.json());
-// app.use('/api', router)
+app.use('/', router);
+app.use((_, res) => {
+    res.sendStatus(404);
+})
+
 
 async function startApp() {
     try {
