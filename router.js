@@ -2,11 +2,10 @@ import Router from 'express';
 
 const router = new Router();
 
-router.post('/user', async (req, res) => {
-    console.log('CREATE USER ATTEMPT');
+router.post('/register', async (req, res) => {
     try {
         await Promise.resolve();
-        res.status(201).json({ user: 'Vadym' });
+        res.status(201).json({ user: req.body });
     } catch (e) {
         res.status(500).json(e)
     }

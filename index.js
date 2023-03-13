@@ -6,7 +6,7 @@ const PORT = 5001;
 const app = express();
 
 app.use(express.json());
-app.use('/', router);
+app.use('/user', router);
 app.use((_, res) => {
     res.sendStatus(404);
 })
