@@ -1,5 +1,6 @@
 import express from 'express';
 import router from "./router.js";
+import firebaseAuth from './firebase.js';
 
 const PORT = 5001;
 
@@ -14,7 +15,9 @@ app.use((_, res) => {
 
 async function startApp() {
     try {
-        app.listen(PORT, () => console.log(`SERVER STARTED ON PORT ${PORT}`));
+        app.listen(PORT, () => {
+            console.log(`SERVER STARTED ON PORT ${PORT}`);
+        });
     } catch (e) {
         console.log(e);
     }
