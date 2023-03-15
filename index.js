@@ -1,6 +1,5 @@
 import express from 'express';
 import router from "./router.js";
-import firebaseAuth from './firebase.js';
 
 const PORT = 5001;
 

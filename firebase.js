@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 // TODO: move config values to .env
 
@@ -14,4 +14,13 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-export default getAuth(app);
+const auth = getAuth(app);
+
+export const createUser = async ({ email, password }) => {
+    try {
+        const userData = await createUserWithEmailAndPassword(auth, 'dummy1@user.com', '123456');
+        return userData;
+    } catch (error) {
+        console.log('ERROR AT CREATING DUMMY USER', error);
+    }
+}
