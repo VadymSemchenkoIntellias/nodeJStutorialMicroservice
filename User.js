@@ -1,10 +1,8 @@
 import mongoose from 'mongoose';
 
-const Post = new mongoose.Schema({
-    author: {type: String, required: true},
-    title: {type: String, required: true},
-    content: {type: String, required: true},
-    picture: {type: String}
+const User = new mongoose.Schema({
+    email: { type: String, required: true },
+    firebaseUid: { type: String, required: true },
 })
 
-export default mongoose.model('Post', Post)
+export default mongoose.model('User', User);

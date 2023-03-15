@@ -4,9 +4,10 @@ import { createUser } from './firebase.js';
 class UserService {
     async register({ email: incomingEmail, password }) {
         const { user: { email, uid: firebaseUid, stsTokenManager: { refreshToken, accessToken, expirationTime } } } = await createUser({ email: incomingEmail, password });
-        console.log('FIREBASE USER DATA', {
-            email, firebaseUid, refreshToken, accessToken, expirationTime
-        });
+        const dbResult = await User.create({ email, firebaseUid });
+        return {
+            email, firebaseUid, refreshToken, accessToken, expirationTime, id: dbResult._id.valueOf()
+        };
     }
 }
 
