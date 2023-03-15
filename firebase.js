@@ -21,6 +21,8 @@ export const createUser = async ({ email, password }) => {
         const userData = await createUserWithEmailAndPassword(auth, 'dummy1@user.com', '123456');
         return userData;
     } catch (error) {
+        // TODO: add error handling
         console.log('ERROR AT CREATING DUMMY USER', error);
+        throw error;
     }
 }
