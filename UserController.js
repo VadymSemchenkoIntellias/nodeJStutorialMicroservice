@@ -22,6 +22,16 @@ class UserController {
         }
     }
 
+    async findByEmail(req, res) {
+        try {
+            const user = await UserService.findUserByEmail(req.query.email);
+            res.status(200).json(user);
+        } catch (e) {
+            console.log('ERROR', e);
+            res.status(404).json(e)
+        }
+    }
+
 }
 
 

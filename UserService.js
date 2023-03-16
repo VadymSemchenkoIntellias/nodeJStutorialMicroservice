@@ -15,6 +15,11 @@ class UserService {
         const { user: { stsTokenManager: { refreshToken, accessToken, expirationTime } }, _tokenResponse: { idToken } } = response;
         return { refreshToken, accessToken, idToken, expirationTime };
     }
+
+    async findUserByEmail(email) {
+        const { _id, firebaseUid } = await User.findOne({ email });
+        return { id: _id.valueOf(), firebaseUid };
+    }
 }
 
 
