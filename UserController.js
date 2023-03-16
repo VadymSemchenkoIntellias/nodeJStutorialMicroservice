@@ -1,4 +1,3 @@
-import User from "./User.js";
 import UserService from "./UserService.js";
 
 class UserController {
@@ -13,7 +12,14 @@ class UserController {
     }
 
     async login(req, res) {
-        // TODO: use id token veirification https://firebase.google.com/docs/auth/admin/verify-id-tokens
+        try {
+            const tokenData = await UserService.login(req.body);
+            console.log('TOKEN DATA');
+            res.status(200).json(tokenData);
+        } catch (e) {
+            console.log('ERROR', e);
+            res.status(500).json(e)
+        }
     }
 
 }

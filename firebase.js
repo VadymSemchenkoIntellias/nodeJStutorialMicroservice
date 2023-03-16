@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 
 // TODO: move config values to .env
 
@@ -17,3 +17,5 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 export const createUser = async ({ email, password }) => createUserWithEmailAndPassword(auth, email, password);
+
+export const loginUser = async ({ email, password }) => signInWithEmailAndPassword(auth, email, password);

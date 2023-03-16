@@ -1,5 +1,5 @@
 import User from "./User.js";
-import { createUser } from './firebase.js';
+import { createUser, loginUser } from './firebase.js';
 
 class UserService {
     async register({ email: incomingEmail, password }) {
@@ -8,6 +8,12 @@ class UserService {
         return {
             email, firebaseUid, refreshToken, accessToken, expirationTime, id: dbResult._id.valueOf()
         };
+    }
+
+    async login({ email, password }) {
+        const response = await loginUser({ email, password });
+        const { user: { stsTokenManager: { refreshToken, accessToken, expirationTime } }, _tokenResponse: { idToken } } = response;
+        return { refreshToken, accessToken, idToken, expirationTime };
     }
 }
 
