@@ -1,6 +1,9 @@
 import bcrypt from "bcryptjs";
+import { v4 as uuidV4 } from 'uuid';
+import randomString from "randomstring";
 
-import User from "./User.js";
+import User from "./models/User.js";
+import AccessToken from "./models/AccessToken.js";
 import { EMAIL_ALREADY_REGISTERED, INVALID_CREDENTIALS } from './constants/errorsMessages.js';
 import { validateEmail, validatePassword } from './validation.js';
 
@@ -14,8 +17,15 @@ class UserService {
             throw new Error(EMAIL_ALREADY_REGISTERED);
         }
         const passwordHash = await bcrypt.hash(password, 5);
-        const result = await User.create({ email, passwordHash });
-        return { email: result.email, id: result._id };
+        const userData = await User.create({ email, passwordHash });
+        const accessToken = `${uuidV4()}${randomString.generate(4)}`;
+        const expirationTime = Date.now() + 3600000;
+        const accessTokenData = await AccessToken.create({
+            token: accessToken,
+            expirationTime,
+            userId: userData._id
+        });
+        return { email: userData.email, id: userData._id, accessToken, expiresAt: expirationTime };
     }
 
     // async login({ email, password }) {
