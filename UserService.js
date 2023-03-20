@@ -8,6 +8,18 @@ import { EMAIL_ALREADY_REGISTERED, INVALID_CREDENTIALS } from './constants/error
 import { validateEmail, validatePassword } from './validation.js';
 
 class UserService {
+
+    async _createAccessToken(userId) {
+        const accessToken = `${uuidV4()}${randomString.generate(4)}`;
+        const expirationTime = Date.now() + 3600000;
+        await AccessToken.create({
+            token: accessToken,
+            expirationTime,
+            userId
+        });
+        return { accessToken, expirationTime }
+    }
+
     async register({ email, password }) {
         if (!email || !password || !validateEmail(email) || !validatePassword(password)) {
             throw new Error(INVALID_CREDENTIALS);
@@ -18,25 +30,24 @@ class UserService {
         }
         const passwordHash = await bcrypt.hash(password, 5);
         const userData = await User.create({ email, passwordHash });
-        const accessToken = `${uuidV4()}${randomString.generate(4)}`;
-        const expirationTime = Date.now() + 3600000;
-        const accessTokenData = await AccessToken.create({
-            token: accessToken,
-            expirationTime,
-            userId: userData._id
-        });
+        const { accessToken, expirationTime } = await this._createAccessToken(userData._id);
         return { email: userData.email, id: userData._id, accessToken, expiresAt: expirationTime };
     }
 
-    // async login({ email, password }) {
-    //     const response = await loginUser({ email, password });
-    //     const { user: { stsTokenManager: { refreshToken, accessToken, expirationTime } }, _tokenResponse: { idToken } } = response;
-    //     return { refreshToken, accessToken, idToken, expirationTime };
-    // }
+    async login({ email, password }) {
+        const userData = await User.findOne({ email }).lean();
+        if (!userData) { throw new Error(INVALID_CREDENTIALS) };
+        const isPasswordValid = await bcrypt.compare(password, userData.passwordHash);
+        if (!isPasswordValid) { throw new Error(INVALID_CREDENTIALS) };
+        const { accessToken, expirationTime } = await this._createAccessToken(userData._id);
+        return { email: userData.email, id: userData._id, accessToken, expiresAt: expirationTime };
+    }
 
-    // async findUserByEmail(email) {
-    //     return User.findOne({ email }).lean();
-    // }
+    async getUserById(userId) {
+        const userData = await User.findById(userId);
+        return userData;
+    }
+
 }
 
 
