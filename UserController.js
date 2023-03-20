@@ -1,5 +1,7 @@
 import UserService from "./UserService.js";
 import { EMAIL_ALREADY_REGISTERED, INVALID_CREDENTIALS } from './constants/errorsMessages.js';
+import AccessToken from "./models/AccessToken.js";
+import User from "./models/User.js";
 
 class UserController {
     async create(req, res) {
@@ -20,6 +22,27 @@ class UserController {
                     break;
             }
             res.status(errorCode).json({ message });
+        }
+    }
+
+    async logout(req, res) {
+        try {
+            const { authorization } = req.headers;
+            if (!authorization) {
+                res.status(403).json({ message: 'No authorization header provided' });
+            }
+            const parts = authorization.split(' ');
+            const [_, accessToken] = authorization.split(' ');
+            if (!accessToken) {
+                res.status(403).json({ message: 'Invalid authorization header provided' });
+            }
+            const tokenData = await AccessToken.findOneAndDelete({ token: accessToken });
+            if (!tokenData) {
+                res.status(404).json({ message: 'The token is not actual' });
+            }
+            res.status(200).json({ userId: tokenData.userId });
+        } catch (e) {
+            res.status(500).json(e);
         }
     }
 
