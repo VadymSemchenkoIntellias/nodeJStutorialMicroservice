@@ -4,7 +4,7 @@ import randomString from "randomstring";
 
 import User from "./models/User.js";
 import AccessToken from "./models/AccessToken.js";
-import { EMAIL_ALREADY_REGISTERED, INVALID_CREDENTIALS } from './constants/errorsMessages.js';
+import { EMAIL_ALREADY_REGISTERED, INVALID_CREDENTIALS, ALREADY_LOGGED_IN } from './constants/errorsMessages.js';
 import { validateEmail, validatePassword } from './validation.js';
 
 class UserService {
@@ -21,7 +21,9 @@ class UserService {
     }
 
     async register({ email, password }) {
-        if (!email || !password || !validateEmail(email) || !validatePassword(password)) {
+        const invalidCredentailReasons = [!email, !password, !validateEmail(email), !validatePassword(password)];
+        const invalidCredentailReasonIndex = invalidCredentailReasons.findIndex(reason => reason);
+        if (invalidCredentailReasonIndex !== -1) {
             throw new Error(INVALID_CREDENTIALS);
         }
         const existingUser = await User.findOne({ email }).lean();
@@ -39,13 +41,16 @@ class UserService {
         if (!userData) { throw new Error(INVALID_CREDENTIALS) };
         const isPasswordValid = await bcrypt.compare(password, userData.passwordHash);
         if (!isPasswordValid) { throw new Error(INVALID_CREDENTIALS) };
+        const existingToken = await AccessToken.findOne({ userid: userData._id }).lean();
+        if (existingToken) { throw new Error(ALREADY_LOGGED_IN) };
         const { accessToken, expirationTime } = await this._createAccessToken(userData._id);
         return { email: userData.email, id: userData._id, accessToken, expiresAt: expirationTime };
     }
 
     async getUserById(userId) {
-        const userData = await User.findById(userId);
-        return userData;
+        const userData = await User.findById(userId).lean();
+        const { _id, email } = userData;
+        return { id: _id, email };
     }
 
 }

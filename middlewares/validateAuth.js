@@ -14,6 +14,10 @@ export const validateAuth = async (req, res, next) => {
         if (!tokenData) {
             res.status(403).json({ message: 'The token is not actual' });
         }
+        if (tokenData.expirationTime < Date.now()) {
+            await TokenService.deleteToken(accessToken);
+            res.status(403).json({ message: 'Token expired' });
+        }
         req.tokenData = tokenData;
         next();
     } catch (e) {
