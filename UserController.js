@@ -85,6 +85,14 @@ class UserController {
         }
     }
 
+    async refreshToken(req, res) {
+        try {
+            const { refreshToken } = req.body;
+        } catch (e) {
+
+        }
+    }
+
 }
 
 

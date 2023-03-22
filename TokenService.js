@@ -1,12 +1,15 @@
 import AccessToken from "./models/AccessToken.js";
+import RefreshToken from "./models/RefreshToken.js";
 
 class TokenService {
-    deleteToken(token) {
-        return AccessToken.findOneAndDelete({ token });
+    async deleteToken({ accessToken, refreshToken }) {
+        const accessTokenData = await AccessToken.findOneAndDelete({ token: accessToken });
+        await RefreshToken.findOneAndDelete({ token: refreshToken });
+        return accessTokenData;
     }
 
-    getTokenData(token) {
-        return AccessToken.findOne({ token });
+    getTokenData(accessToken) {
+        return AccessToken.findOne({ token: accessToken });
     }
 }
 

@@ -4,6 +4,7 @@ import randomString from "randomstring";
 
 import User from "./models/User.js";
 import AccessToken from "./models/AccessToken.js";
+import RefreshToken from "./models/RefreshToken.js";
 import { EMAIL_ALREADY_REGISTERED, INVALID_CREDENTIALS, ALREADY_LOGGED_IN } from './constants/errorsMessages.js';
 import { validateEmail, validatePassword } from './validation.js';
 
@@ -11,13 +12,20 @@ class UserService {
 
     async _createAccessToken(userId) {
         const accessToken = `${uuidV4()}${randomString.generate(4)}`;
-        const expirationTime = Date.now() + 3600000;
+        const refreshToken = `${uuidV4()}${randomString.generate(4)}`;
+        const accessTokenExpirationTime = Date.now() + 3600000;
+        const refreshTokenExpirationTime = Date.now() + 4800000;
         await AccessToken.create({
             token: accessToken,
-            expirationTime,
+            expirationTime: accessTokenExpirationTime,
             userId
         });
-        return { accessToken, expirationTime }
+        await RefreshToken.create({
+            token: refreshToken,
+            expirationTime: refreshTokenExpirationTime,
+            userId
+        });
+        return { accessToken, accessTokenExpirationTime, refreshToken, refreshTokenExpirationTime }
     }
 
     async register({ email, password }) {
@@ -32,8 +40,8 @@ class UserService {
         }
         const passwordHash = await bcrypt.hash(password, 5);
         const userData = await User.create({ email, passwordHash });
-        const { accessToken, expirationTime } = await this._createAccessToken(userData._id);
-        return { email: userData.email, id: userData._id, accessToken, expiresAt: expirationTime };
+        const { accessToken, accessTokenExpirationTime, refreshToken, refreshTokenExpirationTime } = await this._createAccessToken(userData._id);
+        return { email: userData.email, id: userData._id, accessToken, accessTokenExpiresAt: accessTokenExpirationTime, refreshToken, refreshTokenExpiresAt: refreshTokenExpirationTime };
     }
 
     async login({ email, password }) {
