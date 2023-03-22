@@ -88,8 +88,11 @@ class UserController {
     async refreshToken(req, res) {
         try {
             const { refreshToken } = req.body;
+            const tokenData = await TokenService.refreshToken(refreshToken);
+            res.status(200).json(tokenData);
         } catch (e) {
-
+            console.log('ERROR AT REFRESH TOKEN', e);
+            res.status(401).json(e);
         }
     }
 
