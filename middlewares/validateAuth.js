@@ -1,4 +1,4 @@
-import TokenService from "../TokenService.js";
+
 
 export const validateAuth = async (req, res, next) => {
     try {
@@ -10,6 +10,7 @@ export const validateAuth = async (req, res, next) => {
         if (!accessToken) {
             res.status(403).json({ message: 'Invalid authorization header provided' });
         }
+        return;
         const tokenData = await TokenService.getTokenData(accessToken);
         if (!tokenData) {
             res.status(403).json({ message: 'The token is not actual' });

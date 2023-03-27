@@ -1,5 +1,4 @@
 import UserService from "./UserService.js";
-import TokenService from "./TokenService.js";
 import { EMAIL_ALREADY_REGISTERED, INVALID_CREDENTIALS, ALREADY_LOGGED_IN } from './constants/errorsMessages.js';
 
 class UserController {
@@ -88,8 +87,7 @@ class UserController {
     async refreshToken(req, res) {
         try {
             const { refreshToken } = req.body;
-            const tokenData = await TokenService.refreshToken(refreshToken);
-            res.status(200).json(tokenData);
+            res.status(200).json({});
         } catch (e) {
             console.log('ERROR AT REFRESH TOKEN', e);
             res.status(401).json(e);
