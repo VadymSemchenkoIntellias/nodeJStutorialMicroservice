@@ -33,10 +33,12 @@ class UserService {
         if (!userData) { throw new Error(INVALID_CREDENTIALS) };
         const isPasswordValid = await bcrypt.compare(password, userData.passwordHash);
         if (!isPasswordValid) { throw new Error(INVALID_CREDENTIALS) };
-        const existingAccessToken = await AccessToken.findOne({ userid: userData._id }).lean();
-        if (existingAccessToken) { throw new Error(ALREADY_LOGGED_IN) };
-        const { accessToken, accessTokenExpirationTime, refreshToken, refreshTokenExpirationTime } = await this._createAccessToken(userData._id);
-        return { email: userData.email, id: userData._id, accessToken, accessTokenExpiresAt: accessTokenExpirationTime, refreshToken, refreshTokenExpiresAt: refreshTokenExpirationTime };
+        const jwtToken = jwt.sign({
+            email, id: userData._id
+        }, JWT_KEY, { expiresIn: JWT_EXPIRATION_TIME });
+        return {
+            jwtToken, email, id: userData._id
+        }
     }
 
     async getUserById(userId) {

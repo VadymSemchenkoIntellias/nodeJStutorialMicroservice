@@ -26,29 +26,6 @@ class UserController {
         }
     }
 
-    async logout(req, res) {
-        try {
-            const { authorization } = req.headers;
-            if (!authorization) {
-                res.status(403).json({ message: 'No authorization header provided' });
-                return;
-            }
-            authorization.split(' ');
-            const [_, accessToken] = authorization.split(' ');
-            if (!accessToken) {
-                res.status(403).json({ message: 'Invalid authorization header provided' });
-                return;
-            }
-            const tokenData = await TokenService.deleteToken(accessToken);
-            if (!tokenData) {
-                res.status(404).json({ message: 'The token is not actual' });
-                return;
-            }
-            res.status(200).json({ userId: tokenData.userId });
-        } catch (e) {
-            res.status(500).json(e);
-        }
-    }
 
     async login(req, res) {
         try {

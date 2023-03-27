@@ -1,5 +1,9 @@
 
 
+import jwt from 'jsonwebtoken';
+import { JWT_KEY } from '../constants.js';
+
+
 export const validateAuth = async (req, res, next) => {
     try {
         const { authorization } = req.headers;
@@ -10,6 +14,11 @@ export const validateAuth = async (req, res, next) => {
         if (!accessToken) {
             res.status(403).json({ message: 'Invalid authorization header provided' });
         }
+
+        const payload = jwt.verify(accessToken, JWT_KEY);
+        console.log('PAYLOAD', payload);
+        next();
+
         return;
         const tokenData = await TokenService.getTokenData(accessToken);
         if (!tokenData) {
@@ -22,6 +31,7 @@ export const validateAuth = async (req, res, next) => {
         req.tokenData = tokenData;
         next();
     } catch (e) {
+        console.log('ERROR', e);
         res.status(404).json(e)
     }
 }
