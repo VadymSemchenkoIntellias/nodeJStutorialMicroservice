@@ -15,20 +15,8 @@ export const validateAuth = async (req, res, next) => {
             res.status(403).json({ message: 'Invalid authorization header provided' });
         }
 
-        const payload = jwt.verify(accessToken, JWT_KEY);
-        console.log('PAYLOAD', payload);
-        next();
-
-        return;
-        const tokenData = await TokenService.getTokenData(accessToken);
-        if (!tokenData) {
-            res.status(403).json({ message: 'The token is not actual' });
-        }
-        if (tokenData.expirationTime < Date.now()) {
-            await TokenService.deleteToken(accessToken);
-            res.status(403).json({ message: 'Token expired' });
-        }
-        req.tokenData = tokenData;
+        const { id } = jwt.verify(accessToken, JWT_KEY);
+        req.userId = id;
         next();
     } catch (e) {
         console.log('ERROR', e);

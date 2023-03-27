@@ -50,7 +50,7 @@ class UserController {
 
     async getUserData(req, res) {
         try {
-            const { userId } = req.tokenData;
+            const { userId } = req;
             const userData = await UserService.getUserById(userId);
             if (!userData) {
                 res.status(404).json({ message: 'User not found' });
