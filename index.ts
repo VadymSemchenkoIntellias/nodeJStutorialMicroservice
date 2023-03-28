@@ -1,12 +1,11 @@
 import express from 'express';
-import { router } from "./router";
 import mongoose from 'mongoose';
 
+import { router } from "./router";
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 const PORT = 5001;
-// TODO: move DB password to .env
-const DB_URL = `mongodb+srv://semchenko:a00190019@cluster0.xpyrdb8.mongodb.net/?retryWrites=true&w=majority`;
-
 
 const app = express();
 
@@ -20,7 +19,7 @@ app.use((_, res) => {
 async function startApp() {
     try {
         app.listen(PORT, async () => {
-            await mongoose.connect(DB_URL);
+            await mongoose.connect(process.env.DB_URL as string);
         });
     } catch (e) {
         console.log(e);
