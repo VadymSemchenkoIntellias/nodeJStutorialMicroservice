@@ -4,9 +4,12 @@
   "description": "",
   "main": "index.js",
   "type": "module",
+  "engines": {
+    "node": "16.x"
+  },
   "scripts": {
-    "start": "node index.js",
-    "dev": "ts-node index.ts",
+    "start": "PORT=5001 ts-node index.ts",
+    "dev": "PORT=5001 nodemon index.ts",
     "kill": "lsof -n -i4TCP:5001 | sed '1 d' | awk '{print $2}' | xargs kill -9",
     "lint": "eslint . --fix"
   },
