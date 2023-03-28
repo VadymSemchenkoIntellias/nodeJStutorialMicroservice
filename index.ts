@@ -1,5 +1,5 @@
 import express from 'express';
-import router from "./router.js";
+import { router } from "./router";
 import mongoose from 'mongoose';
 
 
@@ -20,7 +20,7 @@ app.use((_, res) => {
 async function startApp() {
     try {
         app.listen(PORT, async () => {
-            await mongoose.connect(DB_URL, { useUnifiedTopology: true, useNewUrlParser: true });
+            await mongoose.connect(DB_URL);
         });
     } catch (e) {
         console.log(e);

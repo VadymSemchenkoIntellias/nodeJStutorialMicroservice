@@ -6,8 +6,9 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js",
-    "kill": "lsof -n -i4TCP:5001 | sed '1 d' | awk '{print $2}' | xargs kill -9"
+    "dev": "ts-node index.ts",
+    "kill": "lsof -n -i4TCP:5001 | sed '1 d' | awk '{print $2}' | xargs kill -9",
+    "lint": "eslint . --fix"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,17 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.21"
+    "@tsconfig/node16": "^1.0.3",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.15.10",
+    "@types/randomstring": "^1.1.8",
+    "@types/uuid": "^9.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.57.0",
+    "@typescript-eslint/parser": "^5.57.0",
+    "eslint": "^8.36.0",
+    "nodemon": "^2.0.21",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.2"
   }
 }

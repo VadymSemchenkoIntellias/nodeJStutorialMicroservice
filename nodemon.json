@@ -1,0 +1,11 @@
+{
+    "watch": [
+        "./**/*.ts"
+    ],
+    "ignore": [
+        "./dist/**/*.*"
+    ],
+    "execMap": {
+        "ts": "ts-node"
+    }
+}

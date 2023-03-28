@@ -1,8 +1,8 @@
-import Router from 'express';
-import UserController from './UserController.js';
-import { validateAuth } from './middlewares/validateAuth.js';
+import { Router } from 'express';
+import UserController from './UserController';
+import { validateAuth } from './middlewares/validateAuth';
 
-const router = new Router();
+const router = Router();
 
 router.post('/register', UserController.create);
 router.post('/logout', UserController.logout);
@@ -10,4 +10,4 @@ router.post('/login', UserController.login);
 router.get('/getUserData', validateAuth, UserController.getUserData);
 router.post('/refresh', validateAuth, UserController.refreshToken);
 
-export default router;
+export { router };
