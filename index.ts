@@ -17,12 +17,13 @@ app.use((_, res) => {
 
 async function startApp() {
     try {
-        app.listen(5001, async () => {
+        app.listen(process.env.PORT, async () => {
             await mongoose.connect('mongodb+srv://semchenko:a00190019@cluster0.xpyrdb8.mongodb.net/?retryWrites=true&w=majority' as string);
         });
     } catch (e) {
         console.log(e);
     }
 }
+
 
 startApp();
