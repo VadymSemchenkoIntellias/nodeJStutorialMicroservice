@@ -8,8 +8,8 @@
     "node": "16.x"
   },
   "scripts": {
-    "start": "PORT=5001 ts-node index.ts",
-    "dev": "PORT=5001 nodemon index.ts",
+    "start": "PORT=5001 npx ts-node index.ts",
+    "dev": "PORT=5001 npx nodemon index.ts",
     "kill": "lsof -n -i4TCP:5001 | sed '1 d' | awk '{print $2}' | xargs kill -9",
     "lint": "eslint . --fix"
   },
