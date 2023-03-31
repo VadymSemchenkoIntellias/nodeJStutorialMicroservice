@@ -1,12 +1,12 @@
 import UserService from "./UserService";
 import TokenService from "./TokenService";
 
-import { CreateOrLoginUserRequest, CreateOrLoginUserResponse, LogoutUserResponse, ErrorMessage, AuthorizedRequest, GetUserResponse, RefreshTokenRequest, RefreshTokenResponse } from './types';
+import { CreateUserRequest, LoginUserRequest, CreateOrLoginUserResponse, LogoutUserResponse, ErrorMessage, AuthorizedRequest, GetUserResponse, RefreshTokenRequest, RefreshTokenResponse } from './types';
 import { Request } from "express";
 import ResponseError, { ErrorCode } from "./error";
 
 class UserController {
-    async create(req: CreateOrLoginUserRequest, res: CreateOrLoginUserResponse) {
+    async create(req: CreateUserRequest, res: CreateOrLoginUserResponse) {
         try {
             const user = await UserService.register(req.body);
             res.status(201).json(user);
@@ -54,7 +54,7 @@ class UserController {
         }
     }
 
-    async login(req: CreateOrLoginUserRequest, res: CreateOrLoginUserResponse) {
+    async login(req: LoginUserRequest, res: CreateOrLoginUserResponse) {
         try {
             const user = await UserService.login(req.body);
             res.status(200).json(user);

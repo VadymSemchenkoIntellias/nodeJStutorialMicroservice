@@ -4,10 +4,18 @@ import { ErrorCode } from './error';
 
 export type ErrorMessage = { code: ErrorCode, error?: Error };
 
-export type CreateOrLoginUserData = {
+export type LoginUserData = {
     email: string;
     password: string;
 }
+
+export type UserData = {
+    email: string;
+    password: string;
+    name: string;
+    company: string;
+}
+
 
 export type CreateOrLoginUserResponseBody = {
     id: string;
@@ -15,17 +23,22 @@ export type CreateOrLoginUserResponseBody = {
     accessTokenExpirationTime: number;
     refreshToken: string;
     refreshTokenExpirationTime: number;
+    name: string;
+    company: string;
 }
 
-export type RefreshTokenResponseBody = Omit<CreateOrLoginUserResponseBody, 'id'>;
+export type RefreshTokenResponseBody = Omit<CreateOrLoginUserResponseBody, 'id' | 'name' | 'company'>;
 
 export type LogoutUserResponseBody = {
     userId: string;
 }
 
-export type CreateOrLoginUserRequest = Request<ParamsDictionary, CreateOrLoginUserResponseBody, CreateOrLoginUserData>;
 
 export type CreateOrLoginUserResponse = Response<CreateOrLoginUserResponseBody | ErrorMessage>;
+
+export type LoginUserRequest = Request<ParamsDictionary, CreateOrLoginUserResponseBody, LoginUserData>;
+
+export type CreateUserRequest = Request<ParamsDictionary, CreateOrLoginUserResponseBody, UserData>;
 
 export type LogoutUserResponse = Response<LogoutUserResponseBody | ErrorMessage>;
 

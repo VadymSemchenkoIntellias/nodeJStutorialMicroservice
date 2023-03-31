@@ -11,7 +11,8 @@
     "start": "npx ts-node index.ts",
     "dev": "PORT=5001 npx nodemon index.ts",
     "kill": "lsof -n -i4TCP:5001 | sed '1 d' | awk '{print $2}' | xargs kill -9",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "type-check": "npx tsc"
   },
   "repository": {
     "type": "git",

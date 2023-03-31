@@ -7,7 +7,7 @@ import AccessToken from "./models/AccessToken";
 import RefreshToken from "./models/RefreshToken";
 import { validateEmail, validatePassword } from './validation';
 import ResponseError, { ErrorCode } from './error';
-import { CreateOrLoginUserData } from './types';
+import { UserData, LoginUserData } from './types';
 
 class UserService {
 
@@ -29,8 +29,8 @@ class UserService {
         return { accessToken, accessTokenExpirationTime, refreshToken, refreshTokenExpirationTime }
     }
 
-    async register({ email, password }: CreateOrLoginUserData) {
-        const invalidCredentailReasons = [!email, !password, !validateEmail(email), !validatePassword(password)];
+    async register({ email, password, name, company }: UserData) {
+        const invalidCredentailReasons = [!email, !password, !name, !company, !validateEmail(email), !validatePassword(password)];
         const invalidCredentailReasonIndex = invalidCredentailReasons.findIndex(reason => reason);
         if (invalidCredentailReasonIndex !== -1) {
             throw new ResponseError(ErrorCode.INVALID_CREDENTIALS, 'Invalid credentials');
@@ -40,12 +40,12 @@ class UserService {
             throw new ResponseError(ErrorCode.EMAIL_ALREADY_REGISTERED, 'Email already registered');
         }
         const passwordHash = await bcrypt.hash(password, 5);
-        const userData = await User.create({ email, passwordHash });
+        const userData = await User.create({ email, passwordHash, name, company });
         const { accessToken, accessTokenExpirationTime, refreshToken, refreshTokenExpirationTime } = await this._createAccessToken(userData.id);
-        return { email: userData.email, id: userData.id, accessToken, accessTokenExpirationTime, refreshToken, refreshTokenExpirationTime };
+        return { email: userData.email, id: userData.id, accessToken, accessTokenExpirationTime, refreshToken, refreshTokenExpirationTime, name, company };
     }
 
-    async login({ email, password }: CreateOrLoginUserData) {
+    async login({ email, password }: LoginUserData) {
         const userData = await User.findOne({ email }).lean();
         if (!userData) { throw new ResponseError(ErrorCode.INVALID_CREDENTIALS, 'Invalid credentials') };
         const isPasswordValid = await bcrypt.compare(password, userData.passwordHash);
@@ -53,7 +53,7 @@ class UserService {
         const existingAccessToken = await AccessToken.findOne({ userid: userData._id }).lean();
         if (existingAccessToken) { throw new ResponseError(ErrorCode.ALREADY_LOGGED_IN, 'Already logged in') };
         const { accessToken, accessTokenExpirationTime, refreshToken, refreshTokenExpirationTime } = await this._createAccessToken(userData._id.toString());
-        return { email: userData.email, id: userData._id.toString(), accessToken, accessTokenExpirationTime, refreshToken, refreshTokenExpirationTime };
+        return { email: userData.email, id: userData._id.toString(), accessToken, accessTokenExpirationTime, refreshToken, refreshTokenExpirationTime, name: userData.name, company: userData.company };
     }
 
     async getUserById(userId: string) {
