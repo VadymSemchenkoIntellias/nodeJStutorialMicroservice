@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import { ParamsDictionary } from 'express-serve-static-core';
+import { ErrorCode } from './error';
 
-export type ErrorMessage = { message: string };
+export type ErrorMessage = { code: ErrorCode, error?: Error };
 
 export type CreateOrLoginUserData = {
     email: string;

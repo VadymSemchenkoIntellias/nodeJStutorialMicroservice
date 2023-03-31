@@ -1,33 +1,32 @@
 import UserService from "./UserService";
 import TokenService from "./TokenService";
-import { EMAIL_ALREADY_REGISTERED, INVALID_CREDENTIALS, ALREADY_LOGGED_IN } from './constants/errorsMessages';
 
-import { CreateOrLoginUserRequest, CreateOrLoginUserResponse, LogoutUserResponse, ErrorMessage, AuthorizedRequest, GetUserResponse, RefreshTokenRequest, RefreshTokenResponse } from './types'
+import { CreateOrLoginUserRequest, CreateOrLoginUserResponse, LogoutUserResponse, ErrorMessage, AuthorizedRequest, GetUserResponse, RefreshTokenRequest, RefreshTokenResponse } from './types';
 import { Request } from "express";
-
+import ResponseError, { ErrorCode } from "./error";
 
 class UserController {
     async create(req: CreateOrLoginUserRequest, res: CreateOrLoginUserResponse) {
         try {
             const user = await UserService.register(req.body);
             res.status(201).json(user);
-        } catch ({ message }: any) {
-            let errorCode;
-            switch (message) {
-                case EMAIL_ALREADY_REGISTERED:
-                    errorCode = 409;
+        } catch (error: unknown) {
+            let status;
+            switch ((error as ResponseError).code) {
+                case ErrorCode.EMAIL_ALREADY_REGISTERED:
+                    status = 409;
                     break;
-                case INVALID_CREDENTIALS:
-                    errorCode = 400;
+                case ErrorCode.INVALID_CREDENTIALS:
+                    status = 400;
                     break;
-                case ALREADY_LOGGED_IN:
-                    errorCode = 208;
+                case ErrorCode.ALREADY_LOGGED_IN:
+                    status = 208;
                     break;
                 default:
-                    errorCode = 500;
+                    status = 500;
                     break;
             }
-            res.status(errorCode).json({ message } as ErrorMessage);
+            res.status(status).json({ code: (error as ResponseError).code });
         }
     }
 
@@ -35,23 +34,23 @@ class UserController {
         try {
             const { authorization } = req.headers;
             if (!authorization) {
-                res.status(403).json({ message: 'No authorization header provided' } as ErrorMessage);
+                res.status(403).json({ code: ErrorCode.NO_AUTH_HEADER_PROVIDED });
                 return;
             }
             authorization.split(' ');
             const [_, accessToken] = authorization.split(' ');
             if (!accessToken) {
-                res.status(403).json({ message: 'Invalid authorization header provided' } as ErrorMessage);
+                res.status(403).json({ code: ErrorCode.INVALID_AUTH_HEADER_PROVIDED });
                 return;
             }
             const tokenData = await TokenService.deleteToken(accessToken);
             if (!tokenData) {
-                res.status(404).json({ message: 'The token is not actual' } as ErrorMessage);
+                res.status(404).json({ code: ErrorCode.TOKEN_IS_NOT_ACTUAL });
                 return;
             }
             res.status(200).json({ userId: tokenData.userId });
-        } catch (e) {
-            res.status(500).json(e as Error);
+        } catch (error) {
+            res.status(500).json({ code: ErrorCode.UNHANDLED_SERVER_ERROR, error: error as ResponseError });
         }
     }
 
@@ -59,20 +58,20 @@ class UserController {
         try {
             const user = await UserService.login(req.body);
             res.status(200).json(user);
-        } catch ({ message }: any) {
-            let errorCode;
-            switch (message) {
-                case EMAIL_ALREADY_REGISTERED:
-                    errorCode = 409;
+        } catch (error: unknown) {
+            let status;
+            switch ((error as ResponseError).code) {
+                case ErrorCode.EMAIL_ALREADY_REGISTERED:
+                    status = 409;
                     break;
-                case INVALID_CREDENTIALS:
-                    errorCode = 400;
+                case ErrorCode.INVALID_CREDENTIALS:
+                    status = 400;
                     break;
                 default:
-                    errorCode = 500;
+                    status = 500;
                     break;
             }
-            res.status(errorCode).json({ message } as ErrorMessage);
+            res.status(status).json({ code: (error as ResponseError).code, error: error as ResponseError });
         }
     }
 
@@ -81,11 +80,11 @@ class UserController {
             const { userId } = (req as AuthorizedRequest).tokenData;
             const userData = await UserService.getUserById(userId);
             if (!userData) {
-                res.status(404).json({ message: 'User not found' });
+                res.status(404).json({ code: ErrorCode.USER_NOT_FOUND });
             }
             res.status(200).json(userData);
         } catch (e) {
-            res.status(404).json(e as Error);
+            res.status(404).json(e as ResponseError);
         }
     }
 
