@@ -22,3 +22,19 @@ export default class ResponseError extends Error {
         this.code = code;
     }
 }
+
+export const ErrorResponseStatusMaps = {
+    [ErrorCode.ALREADY_LOGGED_OUT]: 409,
+    [ErrorCode.ALREADY_LOGGED_IN]: 409,
+    [ErrorCode.USER_LOGGED_OUT]: 409,
+    [ErrorCode.TOKEN_EXPIRED]: 403,
+    [ErrorCode.USER_LOGGED_OUT]: 409,
+    [ErrorCode.INVALID_CREDENTIALS]: 400,
+    [ErrorCode.EMAIL_ALREADY_REGISTERED]: 409,
+    [ErrorCode.NO_AUTH_HEADER_PROVIDED]: 400,
+    [ErrorCode.INVALID_AUTH_HEADER_PROVIDED]: 400,
+    [ErrorCode.TOKEN_IS_NOT_ACTUAL]: 403,
+    [ErrorCode.UNHANDLED_SERVER_ERROR]: 500,
+    [ErrorCode.USER_NOT_FOUND]: 404,
+    [ErrorCode.REFRESH_TOKEN_IS_NOT_VALID]: 403
+}
