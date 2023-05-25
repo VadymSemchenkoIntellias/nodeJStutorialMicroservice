@@ -1,7 +1,8 @@
 import UserService from "./UserService";
 import TokenService from "./TokenService";
+import ExternalService from "./ExternalService";
 
-import { CreateUserRequest, LoginUserRequest, CreateOrLoginUserResponse, LogoutUserResponse, ErrorMessage, AuthorizedRequest, GetUserResponse, RefreshTokenRequest, RefreshTokenResponse } from './types';
+import { CreateUserRequest, LoginUserRequest, CreateOrLoginUserResponse, LogoutUserResponse, ErrorMessage, AuthorizedRequest, GetUserResponse, RefreshTokenRequest, RefreshTokenResponse, UpdateUserRequest, UpdateUserResponse, TokenData } from './types';
 import { Request } from "express";
 import ResponseError, { ErrorCode } from "./error";
 
@@ -10,6 +11,32 @@ class UserController {
         try {
             const user = await UserService.register(req.body);
             res.status(201).json(user);
+        } catch (error: unknown) {
+            let status;
+            switch ((error as ResponseError).code) {
+                case ErrorCode.EMAIL_ALREADY_REGISTERED:
+                    status = 409;
+                    break;
+                case ErrorCode.INVALID_CREDENTIALS:
+                    status = 400;
+                    break;
+                case ErrorCode.ALREADY_LOGGED_IN:
+                    status = 208;
+                    break;
+                default:
+                    status = 500;
+                    break;
+            }
+            res.status(status).json({ code: (error as ResponseError).code });
+        }
+    }
+
+    async updateUser(req: Request, res: UpdateUserResponse) {
+        const { tokenData: { userId }, body: { name, email } } = req as Request & TokenData;
+        try {
+            const user = await UserService.update({ name, email, id: userId });
+            await ExternalService.updateProductOwner({ name, email, id: userId });
+            res.status(200).json(user);
         } catch (error: unknown) {
             let status;
             switch ((error as ResponseError).code) {
@@ -79,6 +106,19 @@ class UserController {
         try {
             const { userId } = (req as AuthorizedRequest).tokenData;
             const userData = await UserService.getUserById(userId);
+            if (!userData) {
+                res.status(404).json({ code: ErrorCode.USER_NOT_FOUND });
+            }
+            res.status(200).json(userData);
+        } catch (e) {
+            res.status(404).json(e as ResponseError);
+        }
+    }
+
+    async getUserDataById(req: Request, res: GetUserResponse) {
+        try {
+            const { id } = req.params;
+            const userData = await UserService.getUserById(id);
             if (!userData) {
                 res.status(404).json({ code: ErrorCode.USER_NOT_FOUND });
             }

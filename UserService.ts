@@ -7,7 +7,7 @@ import AccessToken from "./models/AccessToken";
 import RefreshToken from "./models/RefreshToken";
 import { validateEmail, validatePassword } from './validation';
 import ResponseError, { ErrorCode } from './error';
-import { UserData, LoginUserData } from './types';
+import { UserData, LoginUserData, UpdateUserData } from './types';
 
 class UserService {
 
@@ -45,21 +45,35 @@ class UserService {
         return { email: userData.email, id: userData.id, accessToken, accessTokenExpirationTime, refreshToken, refreshTokenExpirationTime, name, company };
     }
 
+    async update(dataToUpdate: UpdateUserData) {
+        const { email, name, id } = dataToUpdate;
+        const invalidCredentailReasons = [!email, !name, !validateEmail(email)];
+        const invalidCredentailReasonIndex = invalidCredentailReasons.findIndex(reason => reason);
+        if (invalidCredentailReasonIndex !== -1) {
+            throw new ResponseError(ErrorCode.INVALID_CREDENTIALS, 'Invalid credentials');
+        }
+        const userData = await User.findByIdAndUpdate(id, { email, name }, { new: true });
+        if (!userData) return;
+        const formattedUserData = { ...userData.toJSON(), id };
+    
+        return formattedUserData;
+    }
+
     async login({ email, password }: LoginUserData) {
         const userData = await User.findOne({ email }).lean();
-        if (!userData) { throw new ResponseError(ErrorCode.INVALID_CREDENTIALS, 'Invalid credentials') };
+        if (!userData) { throw new ResponseError(ErrorCode.USER_NOT_FOUND, 'User not found') }
         const isPasswordValid = await bcrypt.compare(password, userData.passwordHash);
-        if (!isPasswordValid) { throw new ResponseError(ErrorCode.INVALID_CREDENTIALS, 'Invalid credentails') };
+        if (!isPasswordValid) { throw new ResponseError(ErrorCode.INVALID_CREDENTIALS, 'Invalid credentails') }
         const existingAccessToken = await AccessToken.findOne({ userid: userData._id }).lean();
-        if (existingAccessToken) { throw new ResponseError(ErrorCode.ALREADY_LOGGED_IN, 'Already logged in') };
+        if (existingAccessToken) { throw new ResponseError(ErrorCode.ALREADY_LOGGED_IN, 'Already logged in') }
         const { accessToken, accessTokenExpirationTime, refreshToken, refreshTokenExpirationTime } = await this._createAccessToken(userData._id.toString());
         return { email: userData.email, id: userData._id.toString(), accessToken, accessTokenExpirationTime, refreshToken, refreshTokenExpirationTime, name: userData.name, company: userData.company };
     }
 
     async getUserById(userId: string) {
         const userData = await User.findById(userId).lean();
-        const { _id, email } = userData;
-        return { id: _id.toString(), email };
+        const { _id, email, name, company } = userData;
+        return { id: _id.toString(), email, name, company };
     }
 
 }

@@ -16,7 +16,6 @@ app.use(cors({
     methods: ['POST']
 }));
 app.use('/user', userRouter);
-app.use('/products', productsRouter);
 app.use((_, res) => {
     res.sendStatus(404);
 })
