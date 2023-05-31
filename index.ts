@@ -1,9 +1,10 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './swagger';
 
 import { router as userRouter } from "./userRouter";
-import { router as productsRouter } from "./productsRouter";
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -16,9 +17,10 @@ app.use(cors({
     methods: ['POST']
 }));
 app.use('/user', userRouter);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use((_, res) => {
     res.sendStatus(404);
-})
+});
 
 
 async function startApp() {

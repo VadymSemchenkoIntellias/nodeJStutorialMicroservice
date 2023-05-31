@@ -7,6 +7,66 @@ import { Request } from "express";
 import ResponseError, { ErrorCode } from "./error";
 
 class UserController {
+    /**
+     * @swagger
+     * /api/create:
+     *  post:
+     *    description: Create a new user
+     *    requestBody:
+     *      content:
+     *        application/json:
+     *          schema:
+     *              type: object
+     *              properties:
+     *                  name:
+     *                      type: string
+     *                      description: The user's name.
+     *                      example: Leanne Graham
+     *                  email:
+     *                      type: string
+     *                      description: The user's email
+     *                      example: The user's email
+     *                  password:
+     *                      type: string
+     *                      description: The user's password
+     *                      example: adhjadj
+     *                  company:
+     *                      type: string
+     *                      description: The user's company
+     *                      example: Umbrella corporation
+     *    responses:
+     *      '201':
+     *        description: User successfully created
+     *        content:
+     *          application/json:
+     *              schema:
+     *                  type: object
+     *                  properties:
+     *                      email:
+     *                        type: string
+     *                        example: some@email.com
+     *                      id:
+     *                        type: string
+     *                        example: some-dummy-id
+     *                      accessToken:
+     *                        type: string
+     *                        example: some-dummy-token
+     *                      accessTokenExpirationTime:
+     *                         type: number
+     *                         example: 1234567890
+     *                      refreshToken:
+     *                          type: string
+     *                          example: some-dummy-refresh-token
+     *                      refreshTokenExpirationTime:
+     *                          type: number
+     *                          example: 1234567890
+     *                      name:
+     *                          type: string
+     *                          example: Vaduard
+     *                      company:
+     *                          type: string
+     *                          example: Umbrella
+     */
     async create(req: CreateUserRequest, res: CreateOrLoginUserResponse) {
         try {
             const user = await UserService.register(req.body);
@@ -31,6 +91,15 @@ class UserController {
         }
     }
 
+    /**
+     * @swagger
+     * /api/updateUser:
+     *  put:
+     *    description: Update user information
+     *    responses:
+     *      '200':
+     *        description: User successfully updated
+     */
     async updateUser(req: Request, res: UpdateUserResponse) {
         const { tokenData: { userId }, body: { name, email } } = req as Request & TokenData;
         try {
@@ -57,6 +126,15 @@ class UserController {
         }
     }
 
+    /**
+    * @swagger
+    * /api/logout:
+    *  post:
+    *    description: Log out a user
+    *    responses:
+    *      '200':
+    *        description: User successfully logged out
+    */
     async logout(req: Request, res: LogoutUserResponse) {
         try {
             const { authorization } = req.headers;
@@ -81,6 +159,15 @@ class UserController {
         }
     }
 
+    /**
+     * @swagger
+     * /api/login:
+     *  post:
+     *    description: Log in a user
+     *    responses:
+     *      '200':
+     *        description: User successfully logged in
+     */
     async login(req: LoginUserRequest, res: CreateOrLoginUserResponse) {
         try {
             const user = await UserService.login(req.body);
@@ -102,6 +189,15 @@ class UserController {
         }
     }
 
+    /**
+     * @swagger
+     * /api/getUserData:
+     *  get:
+     *    description: Retrieve user data
+     *    responses:
+     *      '200':
+     *        description: User data successfully retrieved
+     */
     async getUserData(req: Request, res: GetUserResponse) {
         try {
             const { userId } = (req as AuthorizedRequest).tokenData;
@@ -115,6 +211,15 @@ class UserController {
         }
     }
 
+    /**
+     * @swagger
+     * /api/getUserDataById:
+     *  get:
+     *    description: Retrieve user data by ID
+     *    responses:
+     *      '200':
+     *        description: User data successfully retrieved
+     */
     async getUserDataById(req: Request, res: GetUserResponse) {
         try {
             const { id } = req.params;
@@ -128,6 +233,15 @@ class UserController {
         }
     }
 
+    /**
+     * @swagger
+     * /api/refreshToken:
+     *  post:
+     *    description: Refresh a user's token
+     *    responses:
+     *      '200':
+     *        description: Token successfully refreshed
+     */
     async refreshToken(req: RefreshTokenRequest, res: RefreshTokenResponse) {
         try {
             const { refreshToken } = req.body;
