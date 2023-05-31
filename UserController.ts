@@ -9,6 +9,27 @@ import ResponseError, { ErrorCode } from "./error";
 class UserController {
     /**
      * @swagger
+     * components:
+     *  schemas:
+     *    CreateUserData:
+     *      type: object
+     *      properties:
+     *        name:
+     *          type: string
+     *          description: The user's name.
+     *          example: Leanne Graham
+     *        email:
+     *          type: string
+     *          description: The user's email
+     *          example: The user's email
+     *        password:
+     *          type: string
+     *          description: The user's password
+     *          example: adhjadj
+     *        company:
+     *          type: string
+     *          description: The user's company
+     *          example: Umbrella corporation
      * /api/create:
      *  post:
      *    description: Create a new user
@@ -16,56 +37,39 @@ class UserController {
      *      content:
      *        application/json:
      *          schema:
-     *              type: object
-     *              properties:
-     *                  name:
-     *                      type: string
-     *                      description: The user's name.
-     *                      example: Leanne Graham
-     *                  email:
-     *                      type: string
-     *                      description: The user's email
-     *                      example: The user's email
-     *                  password:
-     *                      type: string
-     *                      description: The user's password
-     *                      example: adhjadj
-     *                  company:
-     *                      type: string
-     *                      description: The user's company
-     *                      example: Umbrella corporation
+     *            $ref: '#/components/schemas/CreateUserData'
      *    responses:
      *      '201':
      *        description: User successfully created
      *        content:
      *          application/json:
-     *              schema:
-     *                  type: object
-     *                  properties:
-     *                      email:
-     *                        type: string
-     *                        example: some@email.com
-     *                      id:
-     *                        type: string
-     *                        example: some-dummy-id
-     *                      accessToken:
-     *                        type: string
-     *                        example: some-dummy-token
-     *                      accessTokenExpirationTime:
-     *                         type: number
-     *                         example: 1234567890
-     *                      refreshToken:
-     *                          type: string
-     *                          example: some-dummy-refresh-token
-     *                      refreshTokenExpirationTime:
-     *                          type: number
-     *                          example: 1234567890
-     *                      name:
-     *                          type: string
-     *                          example: Vaduard
-     *                      company:
-     *                          type: string
-     *                          example: Umbrella
+     *            schema:
+     *              type: object
+     *              properties:
+     *                email:
+     *                  type: string
+     *                  example: some@email.com
+     *                id:
+     *                  type: string
+     *                  example: some-dummy-id
+     *                accessToken:
+     *                  type: string
+     *                  example: some-dummy-token
+     *                accessTokenExpirationTime:
+     *                  type: number
+     *                  example: 1234567890
+     *                refreshToken:
+     *                  type: string
+     *                  example: some-dummy-refresh-token
+     *                refreshTokenExpirationTime:
+     *                  type: number
+     *                  example: 1234567890
+     *                name:
+     *                  type: string
+     *                  example: Vaduard
+     *                company:
+     *                  type: string
+     *                  example: Umbrella
      */
     async create(req: CreateUserRequest, res: CreateOrLoginUserResponse) {
         try {
