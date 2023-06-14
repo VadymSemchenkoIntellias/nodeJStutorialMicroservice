@@ -10,6 +10,11 @@ class UserController {
     /**
      * @swagger
      * components:
+     *  securitySchemes:
+     *      bearerAuth:            # arbitrary name for the security scheme
+     *          type: http
+     *          scheme: bearer
+     *          bearerFormat: JWT 
      *  schemas:
      *    CreateUserData:
      *      type: object
@@ -32,6 +37,8 @@ class UserController {
      *          example: Umbrella corporation
      * /api/create:
      *  post:
+     *    security:
+     *      - bearerAuth: []
      *    description: Create a new user
      *    requestBody:
      *      content:
