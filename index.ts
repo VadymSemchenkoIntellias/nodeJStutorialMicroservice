@@ -4,7 +4,7 @@ import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from './swagger';
 
-import { router as userRouter } from "./userRouter";
+import { router as rootRouter } from './api/api.router'
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -16,8 +16,8 @@ app.use(cors({
     origin: "*",
     methods: ['POST']
 }));
-app.use('/user', userRouter);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api', rootRouter);
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use((_, res) => {
     res.sendStatus(404);
 });

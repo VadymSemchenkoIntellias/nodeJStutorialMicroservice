@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { AuthorizedRequest } from '../types'
-import TokenService from "../TokenService";
+import { AuthorizedRequest } from '../../../types'
+import { TokenService } from "../../../services";
 
 export const validateAuth = async (req: Request, res: Response, next: NextFunction) => {
     try {

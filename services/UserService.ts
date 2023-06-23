@@ -2,12 +2,12 @@ import bcrypt from "bcryptjs";
 import { v4 as uuidV4 } from 'uuid';
 import randomString from "randomstring";
 
-import User from "./models/User";
-import AccessToken from "./models/AccessToken";
-import RefreshToken from "./models/RefreshToken";
-import { validateEmail, validatePassword } from './validation';
-import ResponseError, { ErrorCode } from './error';
-import { UserData, LoginUserData, UpdateUserData } from './types';
+import User from "../models/User";
+import AccessToken from "../models/AccessToken";
+import RefreshToken from "../models/RefreshToken";
+import { validateEmail, validatePassword } from '../validation';
+import ResponseError, { ErrorCode } from '../error';
+import { UserData, LoginUserData, UpdateUserData } from '../types';
 
 class UserService {
 
@@ -55,7 +55,7 @@ class UserService {
         const userData = await User.findByIdAndUpdate(id, { email, name }, { new: true });
         if (!userData) return;
         const formattedUserData = { ...userData.toJSON(), id };
-    
+
         return formattedUserData;
     }
 

@@ -28,7 +28,6 @@ export const ErrorResponseStatusMaps = {
     [ErrorCode.ALREADY_LOGGED_IN]: 409,
     [ErrorCode.USER_LOGGED_OUT]: 409,
     [ErrorCode.TOKEN_EXPIRED]: 403,
-    [ErrorCode.USER_LOGGED_OUT]: 409,
     [ErrorCode.INVALID_CREDENTIALS]: 400,
     [ErrorCode.EMAIL_ALREADY_REGISTERED]: 409,
     [ErrorCode.NO_AUTH_HEADER_PROVIDED]: 400,

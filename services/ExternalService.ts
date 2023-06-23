@@ -1,4 +1,4 @@
-import { UpdateUserData } from './types';
+import { UpdateUserData } from '../types';
 import axios from 'axios';
 
 

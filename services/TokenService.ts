@@ -1,9 +1,8 @@
 import { v4 as uuidV4 } from 'uuid';
 import randomString from "randomstring";
 
-import AccessToken from "./models/AccessToken";
-import RefreshToken from "./models/RefreshToken";
-import ResponseError, { ErrorCode } from './error';
+import { AccessToken, RefreshToken } from '../models';
+import ResponseError, { ErrorCode } from '../error';
 
 class TokenService {
     async deleteToken(accessToken: string) {
