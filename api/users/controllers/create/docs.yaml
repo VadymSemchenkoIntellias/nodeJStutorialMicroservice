@@ -1,5 +1,5 @@
 paths:
-  /users:
+  /api/users/register:
     post:
       summary: Create a new user
       description: This endpoint is for creating a new user
@@ -9,6 +9,11 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateUserRequest'
+            example:
+              email: "user20@email.com"
+              password: "123456"
+              name: "Beautiful Name"
+              company: "Umbrella"
       responses:
         '201':
           description: Successfully created a new user
@@ -16,6 +21,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+              example:
+                id: "12345"
+                accessToken: "access-token-example"
+                accessTokenExpirationTime: 1633029440000
+                refreshToken: "refresh-token-example"
+                refreshTokenExpirationTime: 1633029450000
+                name: "Example Name"
+                company: "Example Company"
         '400':
           description: Invalid request body or invalid credentials
         '409':

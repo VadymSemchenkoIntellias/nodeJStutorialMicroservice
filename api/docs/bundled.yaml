@@ -1,5 +1,5 @@
 paths:
-  /users:
+  /api/users/register:
     post:
       summary: 'Create a new user'
       description: 'This endpoint is for creating a new user'
@@ -11,12 +11,18 @@ paths:
               type: object
               properties: {email: {type: string, description: 'The email of the user.'}, password: {type: string, description: 'The password of the user.'}, name: {type: string, description: 'The name of the user.'}, company: {type: string, description: 'The company of the user.'}}
               required: [email, password, name, company]
+            example:
+              email: user20@email.com
+              password: '123456'
+              name: 'Beautiful Name'
+              company: Umbrella
       responses:
         '201':
           description: 'Successfully created a new user'
           content:
             application/json:
               schema: {type: object, properties: {id: {type: string, description: 'The id of the user.'}, accessToken: {type: string, description: 'The access token for the user.'}, accessTokenExpirationTime: {type: integer, format: int64, description: 'The expiration time of the access token.'}, refreshToken: {type: string, description: 'The refresh token for the user.'}, refreshTokenExpirationTime: {type: integer, format: int64, description: 'The expiration time of the refresh token.'}, name: {type: string, description: 'The name of the user.'}, company: {type: string, description: 'The company of the user.'}}}
+              example: {id: '12345', accessToken: access-token-example, accessTokenExpirationTime: 1633029440000, refreshToken: refresh-token-example, refreshTokenExpirationTime: 1633029450000, name: 'Example Name', company: 'Example Company'}
         '208':
           description: 'Already logged in'
         '400':
