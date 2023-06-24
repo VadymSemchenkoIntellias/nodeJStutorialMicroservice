@@ -1,0 +1,37 @@
+paths:
+  /users:
+    post:
+      summary: Create a new user
+      description: This endpoint is for creating a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '201':
+          description: Successfully created a new user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid request body or invalid credentials
+        '409':
+          description: Email already registered
+        '208':
+          description: Already logged in
+        '500':
+          description: Unexpected error
+
+components:
+  schemas:
+    CreateUserRequest:
+      type: object
+      properties:
+        // Define properties here based on the CreateUserRequest type
+    User:
+      type: object
+      properties:
+        // Define properties here based on the returned user object

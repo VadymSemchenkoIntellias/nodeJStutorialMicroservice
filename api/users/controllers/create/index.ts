@@ -1,6 +1,6 @@
 import UserService from "../../../../services/UserService";
 
-import { CreateUserRequest, LoginUserRequest, CreateOrLoginUserResponse, LogoutUserResponse, ErrorMessage, AuthorizedRequest, GetUserResponse, RefreshTokenRequest, RefreshTokenResponse, UpdateUserRequest, UpdateUserResponse, TokenData } from '../../../../types';
+import { CreateUserRequest, CreateOrLoginUserResponse } from '../../../../types';
 import ResponseError, { ErrorCode } from "../../../../error";
 
 export const create = async (req: CreateUserRequest, res: CreateOrLoginUserResponse) => {

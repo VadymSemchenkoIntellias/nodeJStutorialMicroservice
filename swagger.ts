@@ -2,6 +2,7 @@ import swaggerJsDoc from 'swagger-jsdoc';
 
 const options = {
   definition: {
+    failOnError: true,
     openapi: '3.0.0',
     info: {
       title: 'User microservice',
@@ -14,7 +15,7 @@ const options = {
       }
     ]
   },
-  apis: ['./*.ts']
+  apis: ['./**/*.yaml']
 };
 
 export default swaggerJsDoc(options);
