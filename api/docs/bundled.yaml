@@ -31,6 +31,34 @@ paths:
           description: 'Email already registered'
         '500':
           description: 'Unexpected error'
+  /users/login:
+    post:
+      summary: 'Log in a user'
+      description: 'This endpoint is for logging in a user'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {email: {type: string, description: 'The email of the user.'}, password: {type: string, description: 'The password of the user.'}}
+              required: [email, password]
+            example:
+              email: example@example.com
+              password: ExamplePassword
+      responses:
+        '200':
+          description: 'Successfully logged in'
+          content:
+            application/json:
+              schema: {type: object, properties: {id: {type: string, description: 'The id of the user.'}, accessToken: {type: string, description: 'The access token for the user.'}, accessTokenExpirationTime: {type: integer, format: int64, description: 'The expiration time of the access token.'}, refreshToken: {type: string, description: 'The refresh token for the user.'}, refreshTokenExpirationTime: {type: integer, format: int64, description: 'The expiration time of the refresh token.'}, name: {type: string, description: 'The name of the user.'}, company: {type: string, description: 'The company of the user.'}}}
+              example: {id: '12345', accessToken: access-token-example, accessTokenExpirationTime: 1633029440000, refreshToken: refresh-token-example, refreshTokenExpirationTime: 1633029450000, name: 'Example Name', company: 'Example Company'}
+        '400':
+          description: 'Invalid credentials'
+        '409':
+          description: 'Email already registered'
+        '500':
+          description: 'Unexpected error'
 components:
   schemas:
     CreateUserRequest:
@@ -53,6 +81,18 @@ components:
         - password
         - name
         - company
+    LoginUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 'The email of the user.'
+        password:
+          type: string
+          description: 'The password of the user.'
+      required:
+        - email
+        - password
     User:
       type: object
       properties:

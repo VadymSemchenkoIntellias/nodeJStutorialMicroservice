@@ -4,27 +4,30 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import set from 'lodash.set';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-
-// // Load your main file
-// let root = YAML.load(path.resolve(__dirname, './api/users/docs/main.yaml'));
-
-// Load all other files and add them to the main file
-const files = [
+const controllers = [
     '../api/users/controllers/create/docs.yaml',
-    '../api/users/docs/schemas.yaml'
-    //   './api/users/controllers/login/docs.yaml',
-    //   './api/users/controllers/logout/docs.yaml',
+    '../api/users/controllers/login/docs.yaml',
 ];
+
+const schemas = [
+    '../api/users/docs/schemas.yaml'
+]
 
 let root = {};
 
-files.forEach((file) => {
+controllers.forEach((file) => {
     const data = YAML.load(path.resolve(__dirname, file));
-    root = { ...root, ...data };
+    set(root, 'paths', { ...root.paths, ...data.paths });
+});
+
+schemas.forEach((file) => {
+    const data = YAML.load(path.resolve(__dirname, file));
+    set(root, 'components', { ...root.components, ...data.components });
 });
 
 // Resolve references

@@ -1,0 +1,35 @@
+paths:
+  /users/login:
+    post:
+      summary: Log in a user
+      description: This endpoint is for logging in a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUserRequest'
+            example:
+              email: "example@example.com"
+              password: "ExamplePassword"
+      responses:
+        '200':
+          description: Successfully logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              example:
+                id: "12345"
+                accessToken: "access-token-example"
+                accessTokenExpirationTime: 1633029440000
+                refreshToken: "refresh-token-example"
+                refreshTokenExpirationTime: 1633029450000
+                name: "Example Name"
+                company: "Example Company"
+        '400':
+          description: Invalid credentials
+        '409':
+          description: Email already registered
+        '500':
+          description: Unexpected error
