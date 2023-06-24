@@ -15,7 +15,7 @@ const options = {
       }
     ]
   },
-  apis: ['./**/*.yaml']
+  apis: ['./api/docs/bundled.yaml']
 };
 
 export default swaggerJsDoc(options);

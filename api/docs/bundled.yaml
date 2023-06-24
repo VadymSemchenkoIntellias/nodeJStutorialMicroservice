@@ -1,0 +1,75 @@
+paths:
+  /users:
+    post:
+      summary: 'Create a new user'
+      description: 'This endpoint is for creating a new user'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {email: {type: string, description: 'The email of the user.'}, password: {type: string, description: 'The password of the user.'}, name: {type: string, description: 'The name of the user.'}, company: {type: string, description: 'The company of the user.'}}
+              required: [email, password, name, company]
+      responses:
+        '201':
+          description: 'Successfully created a new user'
+          content:
+            application/json:
+              schema: {type: object, properties: {id: {type: string, description: 'The id of the user.'}, accessToken: {type: string, description: 'The access token for the user.'}, accessTokenExpirationTime: {type: integer, format: int64, description: 'The expiration time of the access token.'}, refreshToken: {type: string, description: 'The refresh token for the user.'}, refreshTokenExpirationTime: {type: integer, format: int64, description: 'The expiration time of the refresh token.'}, name: {type: string, description: 'The name of the user.'}, company: {type: string, description: 'The company of the user.'}}}
+        '208':
+          description: 'Already logged in'
+        '400':
+          description: 'Invalid request body or invalid credentials'
+        '409':
+          description: 'Email already registered'
+        '500':
+          description: 'Unexpected error'
+components:
+  schemas:
+    CreateUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 'The email of the user.'
+        password:
+          type: string
+          description: 'The password of the user.'
+        name:
+          type: string
+          description: 'The name of the user.'
+        company:
+          type: string
+          description: 'The company of the user.'
+      required:
+        - email
+        - password
+        - name
+        - company
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 'The id of the user.'
+        accessToken:
+          type: string
+          description: 'The access token for the user.'
+        accessTokenExpirationTime:
+          type: integer
+          format: int64
+          description: 'The expiration time of the access token.'
+        refreshToken:
+          type: string
+          description: 'The refresh token for the user.'
+        refreshTokenExpirationTime:
+          type: integer
+          format: int64
+          description: 'The expiration time of the refresh token.'
+        name:
+          type: string
+          description: 'The name of the user.'
+        company:
+          type: string
+          description: 'The company of the user.'

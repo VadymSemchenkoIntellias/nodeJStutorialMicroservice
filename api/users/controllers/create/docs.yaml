@@ -24,14 +24,3 @@ paths:
           description: Already logged in
         '500':
           description: Unexpected error
-
-components:
-  schemas:
-    CreateUserRequest:
-      type: object
-      properties:
-        // Define properties here based on the CreateUserRequest type
-    User:
-      type: object
-      properties:
-        // Define properties here based on the returned user object
